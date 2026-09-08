@@ -215,16 +215,18 @@
         <img src="qr_romantico.png" alt="Código QR Romántico" id="qrImage" />
       </div>
 
-      <p class="qr-url-hint">Enlace: <code id="qrUrlText">https://tinyurl.com/Para-Andrea</code></p>
-      
       <div class="qr-modal-actions">
-        <a href="qr_romantico.png" download="QR_Mi_Amor_Bonito.png" class="btn-action btn-download">
-          💾 Descargar QR
+        <button type="button" class="btn-action" id="btnCopyLink">
+          📋 Copiar enlace
+        </button>
+        <a href="qr_romantico.png" download="QR_Para_Andrea.png" class="btn-action btn-download">
+          💾 Guardar QR
         </a>
         <a href="tarjeta_regalo.html" target="_blank" class="btn-action">
-          💌 Tarjeta para imprimir
+          💌 Tarjeta de regalo
         </a>
       </div>
+      <p id="copyToast" style="display:none; color:#ffd166; font-size:0.85rem; margin-top:10px;">¡Enlace copiado con éxito! 💖</p>
     </div>
   </div>
 

@@ -20,12 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnShowQR = document.getElementById('btnShowQR');
   const btnCloseQR = document.getElementById('btnCloseQR');
   const qrModal = document.getElementById('qrModal');
-  const qrUrlText = document.getElementById('qrUrlText');
-
-  // Actualizar texto de URL con la dirección actual
-  if (qrUrlText && window.location.origin) {
-    qrUrlText.textContent = window.location.href;
-  }
+  const btnCopyLink = document.getElementById('btnCopyLink');
+  const copyToast = document.getElementById('copyToast');
 
   // Estado de la experiencia
   let isOpened = false;
@@ -391,4 +387,23 @@ document.addEventListener('DOMContentLoaded', () => {
       qrModal.classList.remove('active');
     }
   });
+
+  // Botón para copiar el enlace limpio https://tinyurl.com/Para-Andrea
+  if (btnCopyLink) {
+    btnCopyLink.addEventListener('click', () => {
+      const link = 'https://tinyurl.com/Para-Andrea';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(() => {
+          if (copyToast) {
+            copyToast.style.display = 'block';
+            setTimeout(() => { copyToast.style.display = 'none'; }, 2500);
+          }
+        }).catch(() => {
+          window.prompt('Copia tu enlace para Andrea:', link);
+        });
+      } else {
+        window.prompt('Copia tu enlace para Andrea:', link);
+      }
+    });
+  }
 });
