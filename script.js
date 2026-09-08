@@ -34,10 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let musicInterval = null;
 
   // ==========================================================================
-  // MOTOR DE PARTÍCULAS EN CANVAS (LLUVIA Y EXPLOSIONES DE CORAZONES)
+  // MOTOR DE PARTÍCULAS EN CANVAS (ULTRA FLUIDO: 60-120 FPS)
+  // Utiliza sprites vectoriales pre-renderizados en GPU para cero lag
   // ==========================================================================
   const canvas = document.getElementById('particles-canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true });
   let particles = [];
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
@@ -48,8 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
     height = canvas.height = window.innerHeight;
   });
 
-  // Lista de emojis y símbolos de amor para las partículas
-  const heartSymbols = ['❤️', '💖', '💕', '💗', '💓', '✨', '🌸', '✨'];
+  // Pre-renderizar sprites de corazones una sola vez en memoria
+  const spriteColors = ['#ff2a6d', '#ff758c', '#d81159', '#ffbe0b', '#ffffff'];
+  const heartSprites = spriteColors.map(color => {
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = 44;
+    offCanvas.height = 44;
+    const offCtx = offCanvas.getContext('2d');
+    
+    offCtx.translate(22, 16);
+    offCtx.fillStyle = color;
+    offCtx.beginPath();
+    // Trazado de corazón paramétrico suave
+    offCtx.moveTo(0, 3);
+    offCtx.bezierCurveTo(-14, -12, -22, 6, 0, 22);
+    offCtx.bezierCurveTo(22, 6, 14, -12, 0, 3);
+    offCtx.fill();
+
+    // Brillo sutil blanco
+    offCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    offCtx.beginPath();
+    offCtx.arc(-6, -2, 2.5, 0, Math.PI * 2);
+    offCtx.fill();
+
+    return offCanvas;
+  });
 
   // Clase para partículas individuales
   class Particle {
@@ -57,47 +81,46 @@ document.addEventListener('DOMContentLoaded', () => {
       this.x = x;
       this.y = y;
       this.isExplosion = isExplosion;
-      this.symbol = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      this.sprite = heartSprites[Math.floor(Math.random() * heartSprites.length)];
       
       if (isExplosion) {
         // Velocidad radial en explosión
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 7 + 2.5;
+        const speed = Math.random() * 5.5 + 2.0;
         this.vx = Math.cos(angle) * speed;
-        this.vy = Math.sin(angle) * speed - 2.5; // Impulso hacia arriba
-        this.size = Math.random() * 22 + 14;
+        this.vy = Math.sin(angle) * speed - 2.0;
+        this.size = Math.random() * 18 + 14;
         this.opacity = 1;
-        this.decay = Math.random() * 0.015 + 0.008;
-        this.gravity = 0.12;
+        this.decay = Math.random() * 0.02 + 0.012;
+        this.gravity = 0.10;
         this.rotation = Math.random() * Math.PI;
-        this.vRotation = (Math.random() - 0.5) * 0.15;
+        this.vRotation = (Math.random() - 0.5) * 0.12;
       } else {
-        // Lluvia ambiental suave que sube flotando
-        this.vx = (Math.random() - 0.5) * 1.2;
-        this.vy = -(Math.random() * 1.5 + 0.8);
-        this.size = Math.random() * 18 + 12;
-        this.opacity = Math.random() * 0.7 + 0.3;
-        this.decay = 0.003;
+        // Lluvia ambiental suave que sube flotando elegantemente
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = -(Math.random() * 1.4 + 0.8);
+        this.size = Math.random() * 16 + 12;
+        this.opacity = Math.random() * 0.6 + 0.35;
+        this.decay = 0.0035;
         this.gravity = 0;
         this.wobble = Math.random() * Math.PI * 2;
-        this.wobbleSpeed = Math.random() * 0.04 + 0.02;
-        this.rotation = (Math.random() - 0.5) * 0.4;
-        this.vRotation = (Math.random() - 0.5) * 0.02;
+        this.wobbleSpeed = Math.random() * 0.035 + 0.02;
+        this.rotation = (Math.random() - 0.5) * 0.3;
+        this.vRotation = (Math.random() - 0.5) * 0.015;
       }
     }
 
     update() {
       if (this.isExplosion) {
         this.vy += this.gravity;
-        this.vx *= 0.98;
+        this.vx *= 0.97;
         this.x += this.vx;
         this.y += this.vy;
         this.opacity -= this.decay;
         this.rotation += this.vRotation;
       } else {
-        // Movimiento ondulante suave
         this.wobble += this.wobbleSpeed;
-        this.x += this.vx + Math.sin(this.wobble) * 0.8;
+        this.x += this.vx + Math.sin(this.wobble) * 0.6;
         this.y += this.vy;
         this.opacity -= this.decay;
         this.rotation += this.vRotation;
@@ -105,30 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     draw(ctx) {
-      if (this.opacity <= 0) return;
+      if (this.opacity <= 0.01) return;
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.rotation);
-      ctx.globalAlpha = Math.max(0, this.opacity);
-      ctx.font = `${this.size}px serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(this.symbol, 0, 0);
+      ctx.globalAlpha = Math.max(0, Math.min(1, this.opacity));
+      const half = this.size / 2;
+      ctx.drawImage(this.sprite, -half, -half, this.size, this.size);
       ctx.restore();
     }
   }
 
-  // Crear ráfaga de corazones
-  function createBurst(x, y, count = 50) {
+  // Crear ráfaga de corazones limpia y sin saturar
+  function createBurst(x, y, count = 28) {
     for (let i = 0; i < count; i++) {
       particles.push(new Particle(x, y, true));
     }
   }
 
-  // Generador continuo de corazones flotantes de fondo
+  // Generador continuo de corazones flotantes de fondo (máximo 22 partículas)
   let ambientCounter = 0;
   function addAmbientHeart() {
-    if (particles.length < 80) {
+    if (particles.length < 22) {
       const x = Math.random() * width;
       const y = height + 20;
       particles.push(new Particle(x, y, false));
@@ -140,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.clearRect(0, 0, width, height);
 
     ambientCounter++;
-    if (ambientCounter % 15 === 0) {
+    if (ambientCounter % 20 === 0) {
       addAmbientHeart();
     }
 
@@ -294,11 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Activar animación de separación en el corazón exterior
     heartSplitCard.classList.add('opened');
 
-    // Explosión de corazones desde el centro
+    // Explosión de corazones desde el centro (ligera y fluida)
     const rect = heartSplitCard.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    createBurst(centerX, centerY, 70);
+    createBurst(centerX, centerY, 24);
 
     // Ocultar caja exterior y revelar el corazón con la foto y textos
     setTimeout(() => {
@@ -307,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
       revealedContent.setAttribute('aria-hidden', 'false');
 
       // Segunda ráfaga suave de celebración
-      createBurst(centerX, centerY - 60, 40);
+      createBurst(centerX, centerY - 40, 14);
     }, 650);
   }
 
@@ -341,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
   btnBurst.addEventListener('click', (e) => {
     e.stopPropagation();
     const rect = btnBurst.getBoundingClientRect();
-    createBurst(rect.left + rect.width / 2, rect.top, 45);
+    createBurst(rect.left + rect.width / 2, rect.top, 18);
     playMelodyNote(523.25, 0, 0.8);
     playMelodyNote(659.25, 0.1, 0.8);
   });
@@ -350,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('pointerdown', (e) => {
     // Si no es un botón ni modal, generar corazones en la posición del toque
     if (!e.target.closest('button') && !e.target.closest('.qr-modal-card')) {
-      createBurst(e.clientX, e.clientY, 10);
+      createBurst(e.clientX, e.clientY, 6);
     }
   });
 
