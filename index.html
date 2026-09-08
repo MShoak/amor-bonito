@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Para Mi Amor Bonito 💖</title>
+  
+  <meta name="description" content="Mi amor bonito * Te quiero. Una sorpresa interactiva especial para ti." />
+  
+  <!-- Vista previa enriquecida para WhatsApp, Telegram y redes -->
+  <meta property="og:title" content="💖 Mi amor bonito" />
+  <meta property="og:description" content="* Te quiero. Toca para abrir tu sorpresa especial..." />
+  <meta property="og:image" content="foto.png" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#ff2a6d" />
+
+  <!-- Tipografías románticas de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet" />
+  
+  <!-- Hoja de estilos -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Canvas para la lluvia y explosiones de corazones y destellos -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Efectos de luz de fondo ambiental -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Contenedor principal de la experiencia -->
+  <main class="experience-container">
+    
+    <!-- PANTALLA INICIAL: Corazón que late y se abre -->
+    <div class="heart-box-wrapper" id="heartBoxWrapper">
+      <div class="prompt-text" id="promptText">
+        <span class="sparkle">✨</span> Toca el corazón para abrir tu sorpresa <span class="sparkle">✨</span>
+      </div>
+
+      <!-- El corazón 3D que se divide en dos mitades -->
+      <div class="heart-split-card" id="heartSplitCard" role="button" aria-label="Abrir corazón sorpresa" tabindex="0">
+        
+        <!-- Mitad izquierda de la cubierta exterior -->
+        <div class="heart-half left-half">
+          <svg viewBox="0 0 250 460" class="half-svg">
+            <defs>
+              <linearGradient id="grad-left" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff2a6d" />
+                <stop offset="60%" stop-color="#b80c41" />
+                <stop offset="100%" stop-color="#670024" />
+              </linearGradient>
+              <filter id="shadow-left" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="-4" dy="6" stdDeviation="8" flood-color="#ff1a60" flood-opacity="0.5" />
+              </filter>
+            </defs>
+            <!-- Trazado de la mitad izquierda del corazón -->
+            <path d="M250,440 C240,430 40,300 15,190 C-10,80 70,10 170,15 C215,17 240,55 250,75 L250,440 Z" 
+                  fill="url(#grad-left)" 
+                  filter="url(#shadow-left)" />
+            <!-- Adornos dorados sutiles en la cubierta -->
+            <path d="M235,410 C225,400 55,285 35,190 C15,95 80,35 165,35 C200,35 225,65 235,85" 
+                  fill="none" 
+                  stroke="rgba(255, 215, 0, 0.4)" 
+                  stroke-width="3" 
+                  stroke-dasharray="6,6" />
+          </svg>
+        </div>
+
+        <!-- Mitad derecha de la cubierta exterior -->
+        <div class="heart-half right-half">
+          <svg viewBox="250 0 250 460" class="half-svg">
+            <defs>
+              <linearGradient id="grad-right" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff4b72" />
+                <stop offset="60%" stop-color="#d81159" />
+                <stop offset="100%" stop-color="#7a002b" />
+              </linearGradient>
+              <filter id="shadow-right" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="4" dy="6" stdDeviation="8" flood-color="#ff1a60" flood-opacity="0.5" />
+              </filter>
+            </defs>
+            <!-- Trazado de la mitad derecha del corazón -->
+            <path d="M250,440 C260,430 460,300 485,190 C510,80 430,10 330,15 C285,17 260,55 250,75 L250,440 Z" 
+                  fill="url(#grad-right)" 
+                  filter="url(#shadow-right)" />
+            <!-- Adornos dorados sutiles en la cubierta -->
+            <path d="M265,410 C275,400 445,285 465,190 C485,95 420,35 335,35 C300,35 275,65 265,85" 
+                  fill="none" 
+                  stroke="rgba(255, 215, 0, 0.4)" 
+                  stroke-width="3" 
+                  stroke-dasharray="6,6" />
+          </svg>
+        </div>
+
+        <!-- Sello central dorado con corazón palpitante -->
+        <div class="lock-seal" id="lockSeal">
+          <div class="seal-inner">
+            <span class="seal-icon">💖</span>
+            <span class="seal-text">ABRIR</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONTENIDO INTERIOR REVELADO (La foto y los textos de amor) -->
+    <div class="revealed-content" id="revealedContent" aria-hidden="true">
+      
+      <!-- Contenedor del marco de corazón con la foto -->
+      <div class="heart-frame-container" id="heartFrame">
+        <svg viewBox="0 0 500 460" class="heart-photo-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <!-- Recorte en forma de corazón exacto -->
+            <clipPath id="inner-heart-clip">
+              <path d="M250,440 C240,430 40,300 15,190 C-10,80 70,10 170,15 C215,17 240,55 250,75 C260,55 285,17 330,15 C430,10 510,80 485,190 C460,300 260,430 250,440 Z" />
+            </clipPath>
+
+            <!-- Filtro de resplandor neón mágico -->
+            <filter id="heart-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="10" result="blur1" />
+              <feGaussianBlur stdDeviation="20" result="blur2" />
+              <feMerge>
+                <feMergeNode in="blur2" />
+                <feMergeNode in="blur1" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+
+            <!-- Gradiente para el borde del corazón -->
+            <linearGradient id="heart-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff758c" />
+              <stop offset="50%" stop-color="#ff2a6d" />
+              <stop offset="100%" stop-color="#ffbe0b" />
+            </linearGradient>
+          </defs>
+
+          <!-- Fondo suave interior del corazón -->
+          <path d="M250,440 C240,430 40,300 15,190 C-10,80 70,10 170,15 C215,17 240,55 250,75 C260,55 285,17 330,15 C430,10 510,80 485,190 C460,300 260,430 250,440 Z" 
+                fill="#2b0014" />
+
+          <!-- Imagen con recorte de corazón, perfectamente encuadrada en el abrazo -->
+          <g clip-path="url(#inner-heart-clip)">
+            <image href="foto.png" xlink:href="foto.png" x="5" y="-125" width="490" height="765" preserveAspectRatio="xMidYMid slice" />
+          </g>
+
+          <!-- Borde brillante exterior que contornea el corazón -->
+          <path d="M250,440 C240,430 40,300 15,190 C-10,80 70,10 170,15 C215,17 240,55 250,75 C260,55 285,17 330,15 C430,10 510,80 485,190 C460,300 260,430 250,440 Z" 
+                fill="none" 
+                stroke="url(#heart-border-gradient)" 
+                stroke-width="7" 
+                filter="url(#heart-glow)" />
+
+          <!-- Borde interior dorado delicado -->
+          <path d="M250,425 C242,415 55,290 32,188 C10,88 82,24 172,28 C212,30 235,62 250,82 C265,62 288,30 328,28 C418,24 490,88 468,188 C445,290 258,415 250,425 Z" 
+                fill="none" 
+                stroke="rgba(255, 255, 255, 0.6)" 
+                stroke-width="2" />
+        </svg>
+
+        <!-- Destellos flotantes decorativos en las esquinas del corazón -->
+        <span class="floating-sparkle sp-1">✨</span>
+        <span class="floating-sparkle sp-2">💖</span>
+        <span class="floating-sparkle sp-3">✨</span>
+      </div>
+
+      <!-- TEXTOS SOLICITADOS CON ANIMACIÓN ROMÁNTICA -->
+      <div class="love-messages" id="loveMessages">
+        <h1 class="main-title">Mi amor bonito</h1>
+        
+        <div class="divider-hearts">
+          <span class="line"></span>
+          <span class="center-heart">💕</span>
+          <span class="line"></span>
+        </div>
+
+        <p class="sub-title">* Te quiero.</p>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN Y CONTROL -->
+      <div class="action-buttons">
+        <!-- Botón para repetir la animación -->
+        <button type="button" class="btn-action" id="btnReplay" title="Volver a abrir el corazón">
+          <span>🔄</span> Abrir otra vez
+        </button>
+
+        <!-- Botón para lluvia de corazones instantánea -->
+        <button type="button" class="btn-action pulse" id="btnBurst" title="Lluvia de corazones">
+          <span>💖</span> Más amor
+        </button>
+
+        <!-- Botón para alternar la música de piano romántico -->
+        <button type="button" class="btn-action" id="btnMusic" title="Activar/desactivar música romántica">
+          <span id="musicIcon">🎵</span> <span id="musicText">Música</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Botón flotante para ver y descargar el código QR -->
+  <button class="qr-floating-btn" id="btnShowQR" title="Ver código QR para compartir">
+    <span>📱</span> Código QR
+  </button>
+
+  <!-- Modal para ver el Código QR -->
+  <div class="qr-modal" id="qrModal">
+    <div class="qr-modal-card">
+      <button class="qr-close-btn" id="btnCloseQR">&times;</button>
+      <h3>📱 Escanea este Código QR</h3>
+      <p>Apunta con la cámara de tu celular para abrir esta sorpresa:</p>
+      
+      <div class="qr-image-container">
+        <img src="qr_romantico.png" alt="Código QR Romántico" id="qrImage" />
+      </div>
+
+      <p class="qr-url-hint">URL local: <code id="qrUrlText">http://192.168.0.8:8000</code></p>
+      
+      <div class="qr-modal-actions">
+        <a href="qr_romantico.png" download="QR_Mi_Amor_Bonito.png" class="btn-action btn-download">
+          💾 Descargar QR
+        </a>
+        <a href="tarjeta_regalo.html" target="_blank" class="btn-action">
+          💌 Tarjeta para imprimir
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archivo JavaScript con la interactividad -->
+  <script src="script.js"></script>
+</body>
+</html>
