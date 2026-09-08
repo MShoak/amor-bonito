@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet" />
   
   <!-- Hoja de estilos -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2.0" />
 </head>
 <body>
   <!-- Canvas para la lluvia y explosiones de corazones y destellos -->
@@ -199,38 +199,7 @@
 
   </main>
 
-  <!-- Botón flotante para ver y descargar el código QR -->
-  <button class="qr-floating-btn" id="btnShowQR" title="Ver código QR para compartir">
-    <span>📱</span> Código QR
-  </button>
-
-  <!-- Modal para ver el Código QR -->
-  <div class="qr-modal" id="qrModal">
-    <div class="qr-modal-card">
-      <button class="qr-close-btn" id="btnCloseQR">&times;</button>
-      <h3>📱 Escanea este Código QR</h3>
-      <p>Apunta con la cámara de tu celular para abrir esta sorpresa:</p>
-      
-      <div class="qr-image-container">
-        <img src="qr_romantico.png" alt="Código QR Romántico" id="qrImage" />
-      </div>
-
-      <div class="qr-modal-actions">
-        <button type="button" class="btn-action" id="btnCopyLink">
-          📋 Copiar enlace
-        </button>
-        <a href="qr_romantico.png" download="QR_Para_Andrea.png" class="btn-action btn-download">
-          💾 Guardar QR
-        </a>
-        <a href="tarjeta_regalo.html" target="_blank" class="btn-action">
-          💌 Tarjeta de regalo
-        </a>
-      </div>
-      <p id="copyToast" style="display:none; color:#ffd166; font-size:0.85rem; margin-top:10px;">¡Enlace copiado con éxito! 💖</p>
-    </div>
-  </div>
-
-  <!-- Archivo JavaScript con la interactividad -->
-  <script src="script.js"></script>
+  <!-- Archivo JavaScript con la interactividad (con parámetro para invalidar caché del navegador) -->
+  <script src="script.js?v=2.0"></script>
 </body>
 </html>

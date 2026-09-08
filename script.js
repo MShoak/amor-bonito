@@ -17,11 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnMusic = document.getElementById('btnMusic');
   const musicIcon = document.getElementById('musicIcon');
   const musicText = document.getElementById('musicText');
-  const btnShowQR = document.getElementById('btnShowQR');
-  const btnCloseQR = document.getElementById('btnCloseQR');
-  const qrModal = document.getElementById('qrModal');
-  const btnCopyLink = document.getElementById('btnCopyLink');
-  const copyToast = document.getElementById('copyToast');
 
   // Estado de la experiencia
   let isOpened = false;
@@ -370,40 +365,4 @@ document.addEventListener('DOMContentLoaded', () => {
       createBurst(e.clientX, e.clientY, 6);
     }
   });
-
-  // ==========================================================================
-  // MODAL DEL CÓDIGO QR
-  // ==========================================================================
-  btnShowQR.addEventListener('click', () => {
-    qrModal.classList.add('active');
-  });
-
-  btnCloseQR.addEventListener('click', () => {
-    qrModal.classList.remove('active');
-  });
-
-  qrModal.addEventListener('click', (e) => {
-    if (e.target === qrModal) {
-      qrModal.classList.remove('active');
-    }
-  });
-
-  // Botón para copiar el enlace limpio https://tinyurl.com/Para-Andrea
-  if (btnCopyLink) {
-    btnCopyLink.addEventListener('click', () => {
-      const link = 'https://tinyurl.com/Para-Andrea';
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(link).then(() => {
-          if (copyToast) {
-            copyToast.style.display = 'block';
-            setTimeout(() => { copyToast.style.display = 'none'; }, 2500);
-          }
-        }).catch(() => {
-          window.prompt('Copia tu enlace para Andrea:', link);
-        });
-      } else {
-        window.prompt('Copia tu enlace para Andrea:', link);
-      }
-    });
-  }
 });
